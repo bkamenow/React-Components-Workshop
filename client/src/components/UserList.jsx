@@ -6,11 +6,13 @@ import SearchForm from "./SearchFrom";
 import UserListItem from "./UserListItem";
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
+import UserDeleteModal from "./DeleteUserModal";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const [showCreate, setShowCreate] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
@@ -50,6 +52,22 @@ export default function UserList() {
     setShowInfo(true);
   };
 
+  const deleteUserClickHandler = (userId) => {
+    setSelectedUser(userId);
+    setShowDelete(true);
+  };
+
+  const deleteUserHandler = async () => {
+    // Remove user form server
+    const result = await userService.remove(selectedUser);
+
+    // Remove user from state
+    setUsers((state) => state.filter((user) => user._id !== selectedUser));
+
+    // Close the delete modal
+    setShowDelete(false);
+  };
+
   return (
     <section className='card users-container'>
       {showCreate && (
@@ -63,6 +81,13 @@ export default function UserList() {
         <UserInfoModal
           onClose={() => setShowInfo(false)}
           userId={selectedUser}
+        />
+      )}
+
+      {showDelete && (
+        <UserDeleteModal
+          onClose={() => setShowDelete(false)}
+          onDelete={deleteUserHandler}
         />
       )}
 
@@ -177,6 +202,7 @@ export default function UserList() {
                 phoneNumber={user.phoneNumber}
                 createdAt={user.createdAt}
                 onInfoClick={userInfoClickHandler}
+                onDeleteClick={deleteUserClickHandler}
               />
             ))}
           </tbody>
