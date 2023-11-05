@@ -7,19 +7,23 @@ import UserListItem from "./UserListItem";
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
 import UserDeleteModal from "./DeleteUserModal";
+import Spiner from "./Spiner";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
     userService
       .getAll()
       .then((result) => setUsers(result))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const createUserClickHandler = () => {
@@ -59,7 +63,7 @@ export default function UserList() {
 
   const deleteUserHandler = async () => {
     // Remove user form server
-    const result = await userService.remove(selectedUser);
+    await userService.remove(selectedUser);
 
     // Remove user from state
     setUsers((state) => state.filter((user) => user._id !== selectedUser));
@@ -76,6 +80,8 @@ export default function UserList() {
           onUserCreate={userCreateHandler}
         />
       )}
+
+      {isLoading && <Spiner />}
 
       {showInfo && (
         <UserInfoModal
