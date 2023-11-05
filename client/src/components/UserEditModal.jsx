@@ -1,11 +1,20 @@
-export default function CreateUserModal({ onClose, onUserCreate }) {
+import { useEffect, useState } from "react";
+import * as userService from "../services/userService";
+
+export default function UserEditModal({ onClose, onEdit, userId }) {
+  const [userDetails, setUserDetails] = useState({ address: {} });
+
+  useEffect(() => {
+    userService.getOne(userId).then((result) => setUserDetails(result));
+  }, [userId]);
+
   return (
     <div className='overlay'>
       <div className='backdrop' onClick={onClose}></div>
       <div className='modal'>
         <div className='user-container'>
           <header className='headers'>
-            <h2>Add User</h2>
+            <h2>Edit User</h2>
             <button className='btn close' onClick={onClose}>
               <svg
                 aria-hidden='true'
@@ -24,7 +33,7 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
               </svg>
             </button>
           </header>
-          <form onSubmit={onUserCreate}>
+          <form id='editUserForm'>
             <div className='form-row'>
               <div className='form-group'>
                 <label htmlFor='firstName'>First name</label>
@@ -32,7 +41,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-user'></i>
                   </span>
-                  <input id='firstName' name='firstName' type='text' />
+                  <input
+                    id='firstName'
+                    name='firstName'
+                    type='text'
+                    defaultValue={userDetails.firstName}
+                  />
                 </div>
               </div>
               <div className='form-group'>
@@ -41,7 +55,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-user'></i>
                   </span>
-                  <input id='lastName' name='lastName' type='text' />
+                  <input
+                    id='lastName'
+                    name='lastName'
+                    type='text'
+                    defaultValue={userDetails.lastName}
+                  />
                 </div>
               </div>
             </div>
@@ -53,7 +72,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-envelope'></i>
                   </span>
-                  <input id='email' name='email' type='text' />
+                  <input
+                    id='email'
+                    name='email'
+                    type='text'
+                    defaultValue={userDetails.email}
+                  />
                 </div>
               </div>
               <div className='form-group'>
@@ -62,7 +86,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-phone'></i>
                   </span>
-                  <input id='phoneNumber' name='phoneNumber' type='text' />
+                  <input
+                    id='phoneNumber'
+                    name='phoneNumber'
+                    type='text'
+                    defaultValue={userDetails.phoneNumber}
+                  />
                 </div>
               </div>
             </div>
@@ -73,7 +102,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                 <span>
                   <i className='fa-solid fa-image'></i>
                 </span>
-                <input id='imageUrl' name='imageUrl' type='text' />
+                <input
+                  id='imageUrl'
+                  name='imageUrl'
+                  type='text'
+                  defaultValue={userDetails.imageUrl}
+                />
               </div>
             </div>
 
@@ -84,7 +118,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-map'></i>
                   </span>
-                  <input id='country' name='country' type='text' />
+                  <input
+                    id='country'
+                    name='country'
+                    type='text'
+                    defaultValue={userDetails.country}
+                  />
                 </div>
               </div>
               <div className='form-group'>
@@ -93,7 +132,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-city'></i>
                   </span>
-                  <input id='city' name='city' type='text' />
+                  <input
+                    id='city'
+                    name='city'
+                    type='text'
+                    defaultValue={userDetails.city}
+                  />
                 </div>
               </div>
             </div>
@@ -105,7 +149,12 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-map'></i>
                   </span>
-                  <input id='street' name='street' type='text' />
+                  <input
+                    id='street'
+                    name='street'
+                    type='text'
+                    defaultValue={userDetails.street}
+                  />
                 </div>
               </div>
               <div className='form-group'>
@@ -114,12 +163,22 @@ export default function CreateUserModal({ onClose, onUserCreate }) {
                   <span>
                     <i className='fa-solid fa-house-chimney'></i>
                   </span>
-                  <input id='streetNumber' name='streetNumber' type='text' />
+                  <input
+                    id='streetNumber'
+                    name='streetNumber'
+                    type='text'
+                    defaultValue={userDetails.streetNumber}
+                  />
                 </div>
               </div>
             </div>
             <div id='form-actions'>
-              <button id='action-save' className='btn' type='submit'>
+              <button
+                id='action-save'
+                className='btn'
+                type='submit'
+                onClick={onEdit}
+              >
                 Save
               </button>
               <button

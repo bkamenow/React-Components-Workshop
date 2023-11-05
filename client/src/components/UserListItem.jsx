@@ -10,6 +10,7 @@ export default function UserListItem({
   createdAt,
   onInfoClick,
   onDeleteClick,
+  onEditClick,
 }) {
   const infoClickHandler = () => {
     onInfoClick(_id);
@@ -17,6 +18,10 @@ export default function UserListItem({
 
   const deleteClickHandler = () => {
     onDeleteClick(_id);
+  };
+
+  const editClickHandler = () => {
+    onEditClick(_id);
   };
 
   return (
@@ -31,7 +36,11 @@ export default function UserListItem({
       <td>{formatDate(createdAt)}</td>
 
       <td className='actions'>
-        <button className='btn edit-btn' title='Edit'>
+        <button
+          className='btn edit-btn'
+          title='Edit'
+          onClick={editClickHandler}
+        >
           <svg
             aria-hidden='true'
             focusable='false'

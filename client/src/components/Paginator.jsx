@@ -1,13 +1,21 @@
 export default function Paginator() {
+  const handleSelectChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
   return (
     <div className='pagination position'>
       <div className='limits'>
         <span>Items per page:</span>
-        <select name='limit' className='limit' value='5'>
+        <select
+          name='limit'
+          className='limit'
+          value='5'
+          onChange={handleSelectChange}
+        >
           <option value='5'>5</option>
-          <option value='5'>10</option>
-          <option value='5'>15</option>
-          <option value='5'>20</option>
+          <option value='10'>10</option>
+          <option value='15'>15</option>
+          <option value='20'>20</option>
         </select>
       </div>
       <p className='pages'>1 - 1 of 1</p>

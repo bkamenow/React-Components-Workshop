@@ -7,6 +7,7 @@ import UserListItem from "./UserListItem";
 import CreateUserModal from "./CreateUserModal";
 import UserInfoModal from "./UserInfoModal";
 import UserDeleteModal from "./DeleteUserModal";
+import UserEditModal from "./UserEditModal";
 import Spiner from "./Spiner";
 
 export default function UserList() {
@@ -15,6 +16,7 @@ export default function UserList() {
   const [showCreate, setShowCreate] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
@@ -72,6 +74,34 @@ export default function UserList() {
     setShowDelete(false);
   };
 
+  const editUserClickHandler = (userId) => {
+    setSelectedUser(userId);
+    setShowEdit(true);
+  };
+
+  const editUserHandler = async (e) => {
+    e.preventDefault();
+
+    // Get the updated data from the form
+    const form = document.getElementById("editUserForm");
+    const formData = new FormData(form);
+
+    // Make an API call to update the user on the server
+    await userService.update(selectedUser, Object.fromEntries(formData));
+
+    // Update the user's information in the local state
+    setUsers((users) =>
+      users.map((user) =>
+        user._id === selectedUser
+          ? { ...user, ...Object.fromEntries(formData) }
+          : user
+      )
+    );
+
+    // Close the modal
+    setShowEdit(false);
+  };
+
   return (
     <section className='card users-container'>
       {showCreate && (
@@ -94,6 +124,14 @@ export default function UserList() {
         <UserDeleteModal
           onClose={() => setShowDelete(false)}
           onDelete={deleteUserHandler}
+        />
+      )}
+
+      {showEdit && (
+        <UserEditModal
+          onClose={() => setShowEdit(false)}
+          onEdit={editUserHandler}
+          userId={selectedUser}
         />
       )}
 
@@ -209,6 +247,7 @@ export default function UserList() {
                 createdAt={user.createdAt}
                 onInfoClick={userInfoClickHandler}
                 onDeleteClick={deleteUserClickHandler}
+                onEditClick={editUserClickHandler}
               />
             ))}
           </tbody>
